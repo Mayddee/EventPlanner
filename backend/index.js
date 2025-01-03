@@ -91,6 +91,11 @@ app.get('/api/users', async (req, res) => {
 app.post('/api/register', async (req, res) => {
     const { username, password } = req.body;
     try {
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+          return res.status(400).json({ error: "Username already taken" });
+        }
+    
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({ username, password: hashedPassword });
         await newUser.save();
