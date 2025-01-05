@@ -112,6 +112,7 @@ function App() {
      handleCancel,
      handleOk,
      isModalOpen,
+     setIsModalOpen,
      title,
      setTitle,
      date,

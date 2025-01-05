@@ -3,6 +3,8 @@ import { Modal, Flex, Space, Input, DatePicker, TimePicker, Radio, Button } from
 import EventList from './EventList';
 import TextArea from 'antd/es/input/TextArea';
 import { context } from "../App";
+import axios from "axios";
+import dayjs from "dayjs";
 
 const Home = () => {
     const { sortSelect, 
@@ -11,6 +13,7 @@ const Home = () => {
         handleCancel,
         handleOk,
         isModalOpen,
+        setIsModalOpen,
         title,
         setTitle,
         date,
@@ -22,6 +25,28 @@ const Home = () => {
         setPriority,
         description,
         setDescription} = useContext(context);
+    
+        const addEvent = async () => {
+          if(!time || !date){
+            alert("Please select date and time!");
+          }
+          const customDateTime = dayjs(date).set("hour", time.hour()).set("minute", time.minute());
+          try{
+            const newEvent = {
+              name: title,
+              description: description,
+              plannedDateTime: customDateTime,
+              priority: priority
+            }
+            const response = await axios.post("http://localhost:3010/api/event", newEvent);
+            console.log("Data on handling adding an event: ",response.data);
+            setIsModalOpen(false);
+  
+          } catch(error){
+            console.error('Error adding object:', error);
+          }
+         
+        }
 
     return <div className="home">
 
