@@ -14,17 +14,23 @@ import { Strategy as LocalStrategy } from "passport-local";
 passport.use(
   new LocalStrategy(async (username, password, done) => {
     try {
+        console.log("Authenticating user:", username); 
         const user = await User.findOne({username});
         if(!user){
-            return done(null, false, { message: "User not found"});
+            console.log("User not found:", username);
+            return done(null, false, { message: 'Invalid username'});
         }
         const match = await bcrypt.compare(password, user.password);
         if(!match){
-            return done(null, false, { message: 'Invalid password' });
+            console.log("Password mismatch for user:", username); // Log password failure
+            return done(null, false, { message: 'Invalid password' });        
         }
+        console.log("Authentication successful for user:", username); // Log success
 
         return done(null, user);
     } catch(err){
+        console.error("Error in authentication:", err); // Log any errors
+
         return done(err);
     }
   }

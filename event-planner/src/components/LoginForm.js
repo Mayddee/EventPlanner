@@ -1,7 +1,33 @@
-import React from "react";
+import React, {useContext} from "react";
 import { Button, Checkbox, Form, Input } from "antd";
+import { context } from "../App";
 
 const LoginForm = () => {
+
+    const { sortSelect, 
+                setSortSelect,
+                showModal,
+                handleCancel,
+                handleOk,
+                isModalOpen,
+                title,
+                setTitle,
+                date,
+                setDate,
+                time,
+                setTime,
+                timeFormat,
+                priority,
+                setPriority,
+                description,
+                setDescription,
+                username,
+                setUsername,
+                password,
+                setPassword,
+                handleRegister,
+                handleLogin
+        } = useContext(context);
 
     const onFinish = (values) => {
         console.log('Success:', values);
@@ -41,7 +67,7 @@ const LoginForm = () => {
                         },
                     ]}
                 >
-                    <Input />
+                    <Input value={username} onChange={(e) => setUsername(e.target.value)} />
                 </Form.Item>
 
                 <Form.Item
@@ -54,7 +80,7 @@ const LoginForm = () => {
                         },
                     ]}
                 >
-                    <Input.Password />
+                    <Input.Password value={password} onChange={(e) => setPassword(e.target.value)} />
                 </Form.Item>
 
                 <Form.Item name="remember" valuePropName="checked" label={null}>
@@ -62,8 +88,8 @@ const LoginForm = () => {
                 </Form.Item>
 
                 <Form.Item label={null}>
-                    <Button type="primary" htmlType="submit">
-                        Submit
+                    <Button type="primary" htmlType="submit" onClick={handleLogin}>
+                        Log In
                     </Button>
                 </Form.Item>
             </Form>

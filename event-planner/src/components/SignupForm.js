@@ -85,7 +85,7 @@ const SignupForm = () => {
 
                 <Form.Item label={null}>
                     <Button type="primary" htmlType="submit" onClick={handleRegister}>
-                        Submit
+                        Signup
                     </Button>
                 </Form.Item>
             </Form>

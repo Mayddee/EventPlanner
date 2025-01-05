@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'; // Importing necessary router functions
 import SignupForm from './components/SignupForm';
 import Home from './components/Home';
+import LoginForm from './components/LoginForm';
 
 
 
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "signup",
         element: <SignupForm />
+      },
+      {
+        path: "login",
+        element: <LoginForm />
       }
     ]
   },

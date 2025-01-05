@@ -2,12 +2,12 @@ import logo from './logo.svg';
 import './App.css';
 import "dayjs";
 import dayjs from 'dayjs';
-import { createContext, useCallback, useMemo, useState } from 'react';
+import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 
 import EventList from './components/EventList';
 import Header from './components/Header';
 import axios from "axios";
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 export const context = createContext({});
 
@@ -22,6 +22,9 @@ function App() {
   const [sortSelect, setSortSelect] = useState("Priority");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const navigate = useNavigate();
 
   
 
@@ -39,10 +42,46 @@ function App() {
       );
             const data = await response.data;
       alert(data.message)
+      setUsername("");
+      setPassword("");
+      navigate("/home");
 
     }catch(err){
       console.error("Error: ", err.response ? err.response.data : err);
     alert("Error: ", err.response ? err.response.data.error : err);
+    }
+  }
+
+  const handleLogin = async () => {
+    try{
+      const response = await axios.post( 
+        "http://localhost:3010/api/login", 
+        { username, password });
+        const data = await response.data;
+        if(data.user){
+          localStorage.setItem("userId", data.user._id);
+        }
+        // alert(data.message);
+        setIsAuthenticated(true);
+        navigate("/");
+        
+    } catch(err){
+      console.error("Error: ", err.response ? err.response.data : err);
+      alert("Error: ", err.response ? err.response.data.error : err);
+    }
+
+  }
+
+  const handleLogout = async () => {
+    try{
+      const response = await axios.get("/api/logout");
+      const data = await response.data;
+      setIsAuthenticated(false);
+      console.log("User logged out successfully: ", data);
+      navigate("/home");
+    }
+    catch(err){
+      console.error(err.response ? err.response.data : err);
     }
   }
   
@@ -60,6 +99,11 @@ function App() {
   const handleSortSelect = useCallback((event) => {
     setSortSelect(event.target.value);
   }, [sortSelect]);
+
+  useEffect(()=> {
+    console.log("User authenticated: ", isAuthenticated);
+
+  }, [isAuthenticated])
 
   const contextValues = useMemo(()=> {
     return { sortSelect, 
@@ -83,7 +127,10 @@ function App() {
      setUsername,
     password,
     setPassword,
-     handleRegister
+     handleRegister,
+     handleLogin,
+     isAuthenticated,
+     handleLogout
     }
  
    }, [ sortSelect, 
@@ -104,7 +151,11 @@ function App() {
      description,
      setDescription,
      username, 
-     password
+     password,
+     setPassword,
+     handleRegister,
+     handleLogin,
+     isAuthenticated
     ]);
 
   return (
